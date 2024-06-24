@@ -75,7 +75,3 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
-
-.font-inter {
-  font-family: "Inter", sans-serif;
-}
