@@ -18,7 +18,7 @@ export default function Logos() {
           <clipPath id="B">
             <use href="#A" />
           </clipPath>
-          <g clip-path="url(#B)">
+          <g clipPath="url(#B)">
             <path
               d="M148.293 155.158c-1.8-8.285-12.262-27.04-16.23-34.97s-7.938-19.1-6.13-26.322c.328-1.312-3.436-11.308-2.354-12.015 8.416-5.5 10.632.6 14.002-1.862 1.734-1.273 4.1 1.047 4.7-1.06 2.158-7.567-3.006-20.76-8.77-26.526-1.885-1.88-4.77-3.06-8.03-3.687-1.254-1.713-3.275-3.36-6.138-4.88-3.188-1.697-10.12-3.938-13.717-4.535-2.492-.4-3.055.287-4.12.46.992.088 5.7 2.414 6.615 2.55-.916.62-3.607-.028-5.324.742-.865.392-1.512 1.877-1.506 2.58 4.9-.496 12.574-.016 17.1 2-3.602.4-9.08.867-11.436 2.105-6.848 3.608-9.873 12.035-8.07 22.133 1.804 10.075 9.738 46.85 12.262 59.13 2.525 12.264-5.408 20.2-10.455 22.354l5.408.363-1.8 3.967c6.484.72 13.695-1.44 13.695-1.44-1.438 3.965-11.176 5.412-11.176 5.412s4.7 1.438 12.258-1.447l12.263-4.688 3.604 9.373 6.854-6.847 2.885 7.2c.014-.001 5.424-1.808 3.62-10.103z"
               fill="#d5d7d8"
@@ -51,8 +51,8 @@ export default function Logos() {
               x2="113.887"
               y2="60.979"
             >
-              <stop offset=".006" stop-color="#6176b9" />
-              <stop offset=".691" stop-color="#394a9f" />
+              <stop offset=".006" stopColor="#6176b9" />
+              <stop offset=".691" stopColor="#394a9f" />
             </linearGradient>
             <path
               d="M113.886 59.718s-2.854-1.3-5.63.453-2.668 3.523-2.668 3.523-1.473-3.283 2.453-4.892 5.844.916 5.844.916z"
@@ -66,8 +66,8 @@ export default function Logos() {
               x2="140.078"
               y2="58.371"
             >
-              <stop offset=".006" stop-color="#6176b9" />
-              <stop offset=".691" stop-color="#394a9f" />
+              <stop offset=".006" stopColor="#6176b9" />
+              <stop offset=".691" stopColor="#394a9f" />
             </linearGradient>
             <path
               d="M140.078 59.458s-2.05-1.172-3.643-1.152c-3.27.043-4.162 1.488-4.162 1.488s.55-3.445 4.732-2.754c2.268.377 3.073 2.418 3.073 2.418z"
@@ -96,7 +96,7 @@ export default function Logos() {
             r="57.5"
             fill="none"
             stroke="#de5833"
-            stroke-width="5"
+            strokeWidth="5"
           />
         </g>
       </svg>
@@ -110,22 +110,22 @@ export default function Logos() {
         <path
           fill="none"
           stroke="#20808d"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           d="M24 4.5v39M13.73 16.573v-9.99L24 16.573m0 14.5L13.73 41.417V27.01L24 16.573m0 0l10.27-9.99v9.99"
         />
         <path
           fill="none"
           stroke="#20808d"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           d="M13.73 31.396H9.44V16.573h29.12v14.823h-4.29"
         />
         <path
           fill="none"
           stroke="#20808d"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           d="M24 16.573L34.27 27.01v14.407L24 31.073"
         />
       </svg>

@@ -1,6 +1,5 @@
-import { type NextRequest } from "next/server";
 import { redirect } from "next/navigation";
-
+import { useBangs } from "@/utils";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("q");
@@ -8,9 +7,11 @@ export async function GET(request: Request) {
     redirect("/404");
   }
 
-  if (query.startsWith("!")) {
-    redirect(`https://duckduckgo.com/?q=${query}`);
-  }
+  const bang = useBangs(query);
 
-  redirect(`https://www.perplexity.ai/search?q=${query}`);
+  if (bang !== null) {
+    redirect(bang);
+  } else {
+    redirect(`https://www.perplexity.ai/search?q=${encodeURIComponent(query)}`);
+  }
 }

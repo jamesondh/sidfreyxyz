@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
+import { FaGithub } from "react-icons/fa";
 
 export const metadata: Metadata = {
   title: "DuckDuckPerplexity",
@@ -20,19 +21,29 @@ export default function RootLayout({
         </main>
         <footer className="w-full bg-background text-foreground p-4 text-center">
           <p className="opacity-50 text-sm">
-            Made by{" "}
-            <Link href="https://jamesonhodge.com" className="underline">
-              Jameson Hodge
+            <Link href="/" className="underline">
+              Home
+            </Link>{" "}
+            &middot;{" "}
+            <Link href="/about" className="underline">
+              About
             </Link>
-            . View source code on{" "}
+          </p>
+          <div className="flex items-center justify-center mt-1 opacity-50 text-sm gap-x-2">
+            <p>
+              Made by{" "}
+              <Link href="https://jamesonhodge.com" className="underline">
+                Jameson Hodge
+              </Link>
+              .
+            </p>
             <Link
               href="https://github.com/jamesondh/duckduckperplexity"
-              className="underline"
+              className="inline-flex items-center"
             >
-              GitHub
+              <FaGithub className="w-4 h-4" />
             </Link>
-            .
-          </p>
+          </div>
         </footer>
       </body>
     </html>
