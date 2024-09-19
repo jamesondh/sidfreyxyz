@@ -19,7 +19,9 @@ export const supportedBangs: SearchService[] = [
     name: "Wikipedia",
     bangs: ["!w", "!wiki", "!wikipedia"],
     query: (searchQuery: string) =>
-      `https://en.wikipedia.org/wiki/${encodeURIComponent(searchQuery)}`,
+      `https://en.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(
+        searchQuery
+      )}`,
   },
   {
     name: "Claude",
