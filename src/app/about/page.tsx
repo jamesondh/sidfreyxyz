@@ -42,6 +42,13 @@ export default function AboutPage() {
           setting this URL as your search engine:{" "}
           <code>https://duckduckperplexity.vercel.app/search?q=%s</code>.
         </p>
+        <p>
+          Alternatively, if you prefer using ChatGPT as your default search
+          provider instead of Perplexity, use:{" "}
+          <code>https://duckduckperplexity.vercel.app/search/chat?q=%s</code>.
+          This route works identically to the regular search route but defaults
+          to ChatGPT when no !bang is specified.
+        </p>
         <p>Instructions:</p>
         <ul className="list-disc list-inside space-y-2">
           <li>
