@@ -4,7 +4,7 @@ import Link from "next/link";
 import { FaGithub } from "react-icons/fa";
 
 export const metadata: Metadata = {
-  title: "DuckDuckPerplexity",
+  title: "Sidfrey",
   description: "Use DuckDuckGo for !bangs and Perplexity for everything else.",
 };
 
@@ -38,7 +38,7 @@ export default function RootLayout({
               .
             </p>
             <Link
-              href="https://github.com/jamesondh/duckduckperplexity"
+              href="https://github.com/jamesondh/sidfreyxyz"
               className="inline-flex items-center"
             >
               <FaGithub className="w-4 h-4" />

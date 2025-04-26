@@ -12,6 +12,6 @@ export async function GET(request: NextRequest) {
     return;
   }
 
-  // Redirect to the dynamic route, defaulting to Perplexity
-  redirect(`/search/perplexity?q=${encodeURIComponent(query)}`);
+  // Redirect to the dynamic route, defaulting to ChatGPT
+  redirect(`/search/chatgpt?q=${encodeURIComponent(query)}`);
 }
