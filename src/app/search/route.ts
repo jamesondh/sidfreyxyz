@@ -1,17 +1,17 @@
 import { redirect } from "next/navigation";
-import { useBangs } from "@/utils";
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
+import { NextRequest } from "next/server";
+
+// This route now simply redirects to the dynamic route with a default service.
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get("q");
+
   if (!query) {
-    redirect("/404");
+    // If no query, redirect to home or 404, matching the dynamic route's behavior
+    redirect("/");
+    return;
   }
 
-  const bang = useBangs(query);
-
-  if (bang !== null) {
-    redirect(bang);
-  } else {
-    redirect(`https://www.perplexity.ai/search?q=${encodeURIComponent(query)}`);
-  }
+  // Redirect to the dynamic route, defaulting to Perplexity
+  redirect(`/search/perplexity?q=${encodeURIComponent(query)}`);
 }

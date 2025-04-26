@@ -40,16 +40,23 @@ export default function AboutPage() {
         <p>
           You can set DuckDuckPerplexity as your default search engine by
           setting this URL as your search engine:{" "}
-          <code>https://duckduckperplexity.vercel.app/search?q=%s</code>.
+          <code>https://duckduckperplexity.vercel.app/search?q=%s</code>. This
+          defaults to Perplexity if no !bang command is used.
         </p>
         <p>
-          Alternatively, if you prefer using ChatGPT as your default search
-          provider instead of Perplexity, use:{" "}
-          <code>https://duckduckperplexity.vercel.app/search/chat?q=%s</code>.
-          This route works identically to the regular search route but defaults
-          to ChatGPT when no !bang is specified.
+          Alternatively, you can choose your own default search provider by
+          specifying its name in the URL. Use the format:{" "}
+          <code>
+            https://duckduckperplexity.vercel.app/search/[service]?q=%s
+          </code>
+          . Replace `[service]` with the name of your preferred service (e.g.,
+          "google", "chatgpt", "bing", "wikipedia"). For example, to default to
+          Google, use:{" "}
+          <code>https://duckduckperplexity.vercel.app/search/google?q=%s</code>.
+          If you use a !bang command, it will always override the default
+          service.
         </p>
-        <p>Instructions:</p>
+        <p>Instructions for setting your default search engine:</p>
         <ul className="list-disc list-inside space-y-2">
           <li>
             For Chrome:
@@ -62,7 +69,13 @@ export default function AboutPage() {
               </li>
               <li>Enter &quot;DuckDuckPerplexity&quot; as the name</li>
               <li>Enter &quot;ddp&quot; as the keyword</li>
-              <li>Paste the URL above in the URL field</li>
+              <li>
+                Paste the desired URL (e.g.,{" "}
+                <code>
+                  https://duckduckperplexity.vercel.app/search/google?q=%s
+                </code>
+                ) in the URL field
+              </li>
               <li>Click &quot;Add&quot;</li>
               <li>
                 Find DuckDuckPerplexity in the list and click &quot;Make
@@ -81,7 +94,13 @@ export default function AboutPage() {
                 engine&quot;
               </li>
               <li>Enter &quot;DuckDuckPerplexity&quot; as the name</li>
-              <li>Paste the URL above in the search URL field</li>
+              <li>
+                Paste the desired URL (e.g.,{" "}
+                <code>
+                  https://duckduckperplexity.vercel.app/search/google?q=%s
+                </code>
+                ) in the search URL field
+              </li>
               <li>Click &quot;Add&quot;</li>
               <li>Go to Settings &gt; Search</li>
               <li>
@@ -93,11 +112,12 @@ export default function AboutPage() {
         </ul>
       </div>
       <h2 className="mt-8 text-1xl font-bold mb-4 text-foreground">
-        Supported !bangs
+        Available Services for Default Search (and !bangs)
       </h2>
       <Table>
         <TableCaption>
-          Other !bangs will be redirected to DuckDuckGo.
+          Use the 'Service' name in the URL (e.g., /search/google?q=...) to set
+          your default. Other !bangs will be redirected to DuckDuckGo.
         </TableCaption>
         <TableHeader>
           <TableRow>
