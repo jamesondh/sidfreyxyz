@@ -30,8 +30,9 @@ export default function AboutPage() {
         <p>
           Set your default search provider by using the format:{" "}
           <code>https://sidfrey.xyz/search/[service]?q=%s</code>. Replace
-          `[service]` with your preferred provider (e.g., "chatgpt", "google",
-          "perplexity", "bing"). For example, to use ChatGPT as your default:{" "}
+          `[service]` with your preferred provider (e.g., &quot;chatgpt&quot;,
+          &quot;google&quot;, &quot;perplexity&quot;, &quot;bing&quot;). For
+          example, to use ChatGPT as your default:{" "}
           <code>https://sidfrey.xyz/search/chatgpt?q=%s</code>.
         </p>
         <p>Quick setup:</p>
