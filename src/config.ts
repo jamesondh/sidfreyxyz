@@ -31,7 +31,7 @@ export const supportedBangs: SearchService[] = [
   },
   {
     name: "ChatGPT",
-    bangs: ["!gpt", "!chatgpt"],
+    bangs: ["!gpt", "!chatgpt", "!chat"],
     query: (searchQuery: string) =>
       `https://chat.openai.com/?q=${encodeURIComponent(searchQuery)}`,
   },
