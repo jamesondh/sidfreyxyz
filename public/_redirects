@@ -1,0 +1,3 @@
+# Backwards compatibility with old Next.js routes
+# /search/chatgpt?q=hello -> /?s=chatgpt&q=hello
+/search/:service  /?s=:service  301

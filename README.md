@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Sidfrey
 
-## Getting Started
+A fast, customizable browser search router. Set it as your default search engine and use !bangs to search anywhere.
 
-First, run the development server:
+## Usage
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Set your browser's search engine to:
+```
+https://sidfrey.xyz/?q=%s
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then search like:
+- `hello world` → uses your default engine (Perplexity by default)
+- `!g hello world` → Google
+- `!yt cats` → YouTube
+- `!gh react` → GitHub
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Default Bangs
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+| Bang | Service |
+|------|---------|
+| `!g` | Google |
+| `!yt` | YouTube |
+| `!gh` | GitHub |
+| `!w` | Wikipedia |
+| `!r` | Reddit |
+| `!a` | Amazon |
+| `!cl` | Claude |
+| `!gpt` | ChatGPT |
+| `!p` | Perplexity |
+| `!ddg` | DuckDuckGo |
+| `!b` | Bing |
+| `!gi` | Google Images |
+| `!wa` | Wolfram Alpha |
+| `!x` | X/Twitter |
+| `!eb` | eBay |
+| `!so` | Stack Overflow |
+| `!npm` | npm |
+| `!mdn` | MDN Web Docs |
+| `!maps` | Google Maps |
+| `!tw` | Twitch |
 
-## Learn More
+## Features
 
-To learn more about Next.js, take a look at the following resources:
+- **Custom bangs**: Add your own at sidfrey.xyz
+- **Default engine**: Choose what searches go to without a !bang
+- **Override built-ins**: Custom bangs take precedence
+- **Unknown bang fallback**: Unrecognized !bangs go to DuckDuckGo
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## How It Works
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Single static HTML file (~13KB, ~3.5KB gzipped). No server, no build step, no frameworks.
 
-## Deploy on Vercel
+1. Browser sends search to `sidfrey.xyz/?q=your+search`
+2. JavaScript parses the query for !bangs
+3. Redirects to the appropriate service
+4. Settings stored in localStorage
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Legacy URL Support
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Old format still works: `sidfrey.xyz/search/chatgpt?q=hello`
+
+## Deployment
+
+Hosted on Cloudflare Pages. To deploy your own:
+
+1. Fork this repo
+2. Connect to Cloudflare Pages
+3. Set output directory to `public`
+4. Add custom domain in Cloudflare dashboard
+
+## License
+
+MIT

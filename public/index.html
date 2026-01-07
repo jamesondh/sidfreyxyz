@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidfrey</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', 'Courier New', monospace;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #000;
+            color: #fff;
+        }
+
+        h1 {
+            margin-bottom: 0;
+            color: #ff6600;
+        }
+
+        .subtitle {
+            color: #888;
+            margin-top: 4px;
+        }
+
+        code {
+            background: #1a1a1a;
+            border: 1px solid #ff6600;
+            padding: 3px 8px;
+            font-size: 14px;
+            user-select: all;
+            color: #ff6600;
+        }
+
+        .card {
+            background: #0a0a0a;
+            border: 1px solid #ff6600;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .bang-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .bang-row:last-child {
+            border-bottom: none;
+        }
+
+        .bang-key {
+            font-weight: 600;
+            min-width: 60px;
+            color: #ff6600;
+        }
+
+        .bang-url {
+            flex: 1;
+            color: #888;
+            font-size: 13px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .bang-actions button {
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            border: 1px solid #ff6600;
+            background: #000;
+            color: #ff6600;
+        }
+
+        .bang-actions button:hover {
+            background: #ff6600;
+            color: #000;
+        }
+
+        .bang-actions .delete:hover {
+            background: #cc0000;
+            border-color: #cc0000;
+            color: #fff;
+        }
+
+
+        .custom-badge {
+            font-size: 10px;
+            background: #ff6600;
+            color: #000;
+            padding: 2px 6px;
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        button {
+            padding: 8px 12px;
+            font-size: 14px;
+            font-family: inherit;
+            border: 1px solid #ff6600;
+            background: #000;
+            color: #fff;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #ff9933;
+        }
+
+        input::placeholder {
+            color: #666;
+        }
+
+        select option {
+            background: #000;
+            color: #fff;
+        }
+
+        button.primary {
+            background: #ff6600;
+            color: #000;
+            border: 1px solid #ff6600;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button.primary:hover {
+            background: #ff9933;
+            border-color: #ff9933;
+        }
+
+        .add-form {
+            display: grid;
+            grid-template-columns: 80px 1fr auto;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .status {
+            padding: 8px 12px;
+            margin: 8px 0;
+            font-size: 14px;
+            border: 1px solid;
+        }
+
+        .status.success {
+            background: #001a00;
+            color: #00cc00;
+            border-color: #00cc00;
+        }
+
+        .status.error {
+            background: #1a0000;
+            color: #cc0000;
+            border-color: #cc0000;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #default-engine {
+            min-width: 150px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .search-form input {
+            flex: 1;
+        }
+
+        strong {
+            color: #fff;
+        }
+
+        ul {
+            color: #888;
+        }
+
+        ul code {
+            font-size: 12px;
+        }
+    </style>
+    <script>
+        // ============ CORE ENGINE ============
+        const BUILT_IN_BANGS = {
+            g: 'https://google.com/search?q=',
+            yt: 'https://youtube.com/results?search_query=',
+            gh: 'https://github.com/search?q=',
+            w: 'https://en.wikipedia.org/w/index.php?search=',
+            r: 'https://reddit.com/search/?q=',
+            a: 'https://amazon.com/s?k=',
+            cl: 'https://claude.ai/new?q=',
+            gpt: 'https://chatgpt.com/?q=',
+            p: 'https://perplexity.ai/search?q=',
+            ddg: 'https://duckduckgo.com/?q=',
+            b: 'https://bing.com/search?q=',
+            gi: 'https://google.com/search?tbm=isch&q=',
+            wa: 'https://wolframalpha.com/input?i=',
+            x: 'https://x.com/search?q=',
+            eb: 'https://ebay.com/sch/i.html?_nkw=',
+            so: 'https://stackoverflow.com/search?q=',
+            npm: 'https://npmjs.com/search?q=',
+            mdn: 'https://developer.mozilla.org/en-US/search?q=',
+            maps: 'https://google.com/maps/search/',
+            tw: 'https://twitch.tv/search?term=',
+        };
+
+        // Cache config in memory after first read
+        let _config = null;
+        function getConfig() {
+            if (!_config) {
+                try {
+                    _config = JSON.parse(localStorage.getItem('sidfrey') || '{}');
+                } catch {
+                    _config = {};
+                }
+                // Ensure structure
+                _config.defaultEngine = _config.defaultEngine || 'p';
+                _config.customBangs = _config.customBangs || {};
+                _config.removedBuiltInBangs = _config.removedBuiltInBangs || [];
+            }
+            return _config;
+        }
+
+        function saveConfig() {
+            localStorage.setItem('sidfrey', JSON.stringify(_config));
+        }
+
+        function getAllBangs() {
+            const config = getConfig();
+            // Filter out removed built-ins, then apply custom overrides
+            const filtered = Object.fromEntries(
+                Object.entries(BUILT_IN_BANGS).filter(([key]) => !config.removedBuiltInBangs.includes(key))
+            );
+            return { ...filtered, ...config.customBangs };
+        }
+
+        function isCustomBang(key) {
+            return getConfig().customBangs.hasOwnProperty(key);
+        }
+
+        // ============ REDIRECT LOGIC ============
+        const params = new URLSearchParams(location.search);
+        const q = params.get('q');
+        const serviceOverride = params.get('s'); // from /search/:service redirect
+
+        if (q) {
+            const config = getConfig();
+            const bangs = getAllBangs();
+
+            const match = q.match(/!(\w+)/);
+            const bang = match?.[1]?.toLowerCase();
+            const query = q.replace(/!\w+\s*/g, '').trim();
+
+            if (bang && bangs[bang]) {
+                // Known bang
+                location.replace(bangs[bang] + encodeURIComponent(query));
+            } else if (bang) {
+                // Unknown bang → DDG fallback
+                location.replace('https://duckduckgo.com/?q=' + encodeURIComponent(q));
+            } else {
+                // No bang → use service override (from old URL format) or default engine
+                const serviceMap = { chatgpt: 'gpt', google: 'g', perplexity: 'p', bing: 'b', claude: 'cl', duckduckgo: 'ddg', youtube: 'yt', wikipedia: 'w', reddit: 'r', amazon: 'a', github: 'gh', ebay: 'eb' };
+                const effectiveDefault = serviceOverride ? (serviceMap[serviceOverride] || serviceOverride) : config.defaultEngine;
+                const defaultUrl = bangs[effectiveDefault] || bangs['p'];
+                location.replace(defaultUrl + encodeURIComponent(query));
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <h1>⚡ Sidfrey</h1>
+    <p class="subtitle">Lightning-fast bang search. Fully customizable.</p>
+
+    <form class="search-form" action="/" method="GET">
+        <input type="text" name="q" id="search-input" placeholder="Search..." autofocus>
+        <button type="submit" class="primary">Search</button>
+    </form>
+
+    <div class="card">
+        <strong>Set as your browser's search engine:</strong><br><br>
+        <code>https://sidfrey.xyz/?q=%s</code>
+    </div>
+
+    <div class="card">
+        <div class="section-header">
+            <strong>Default Engine</strong>
+        </div>
+        <p style="color:#888;font-size:14px;margin:8px 0;">Used when you search without a !bang</p>
+        <select id="default-engine"></select>
+        <div id="default-status"></div>
+    </div>
+
+    <div class="card">
+        <div class="section-header">
+            <strong>Your Bangs</strong>
+            <div>
+                <button onclick="resetToDefaults()">Reset</button>
+                <button class="primary" onclick="showAddForm()">+ Add Bang</button>
+            </div>
+        </div>
+
+        <div id="add-form" style="display:none;">
+            <div class="add-form">
+                <input type="text" id="new-bang" placeholder="!key" maxlength="10">
+                <input type="text" id="new-url" placeholder="https://example.com/search?q=">
+                <button class="primary" onclick="addBang()">Add</button>
+            </div>
+            <div id="add-status"></div>
+        </div>
+
+        <div id="bangs-list"></div>
+    </div>
+
+    <div class="card" style="font-size:13px;color:#888;">
+        <strong>Tips:</strong>
+        <ul style="margin:8px 0;padding-left:20px;">
+            <li>Custom bangs override built-in ones</li>
+            <li>Use <code>{q}</code> or end URL with <code>?q=</code> for query placement</li>
+            <li>Unknown !bangs fall back to DuckDuckGo</li>
+        </ul>
+    </div>
+
+    <footer
+        style="margin-top:32px;padding-top:16px;border-top:1px solid #333;font-size:13px;color:#888;text-align:center;">
+        Built by <a href="https://jamesonhodge.com" style="color:#ff6600;">Jameson Hodge</a> · <a
+            href="https://github.com/jamesondh/sidfreyxyz" style="color:#ff6600;">GitHub</a>
+    </footer>
+
+    <script>
+        // ============ UI LOGIC ============
+        function renderBangsList() {
+            const config = getConfig();
+            const container = document.getElementById('bangs-list');
+            const bangs = getAllBangs();
+
+            // Sort: custom first, then alphabetical
+            const keys = Object.keys(bangs).sort((a, b) => {
+                const aCustom = isCustomBang(a);
+                const bCustom = isCustomBang(b);
+                if (aCustom && !bCustom) return -1;
+                if (!aCustom && bCustom) return 1;
+                return a.localeCompare(b);
+            });
+
+            container.innerHTML = keys.map(key => {
+                const isCustom = isCustomBang(key);
+                const overridesBuiltIn = isCustom && BUILT_IN_BANGS.hasOwnProperty(key);
+                return `
+        <div class="bang-row">
+            <span class="bang-key">!${key}</span>
+            <span class="bang-url" title="${bangs[key]}">${bangs[key]}</span>
+            ${isCustom ? '<span class="custom-badge">custom</span>' : ''}
+            ${overridesBuiltIn ? '<span class="custom-badge" style="background:#cc6600;color:#000;">override</span>' : ''}
+            <span class="bang-actions">
+                <button onclick="editBang('${key}', ${isCustom})">Edit</button>
+                <button class="delete" onclick="deleteBang('${key}')">Delete</button>
+            </span>
+        </div>
+        `;
+            }).join('');
+        }
+
+        function renderDefaultEngine() {
+            const config = getConfig();
+            const bangs = getAllBangs();
+            const select = document.getElementById('default-engine');
+
+            select.innerHTML = Object.keys(bangs)
+                .sort()
+                .map(key => `<option value="${key}" ${config.defaultEngine === key ? 'selected' : ''}>!${key}</option>`)
+                .join('');
+
+            select.onchange = () => {
+                config.defaultEngine = select.value;
+                saveConfig();
+                showStatus('default-status', 'Default engine saved!', 'success');
+            };
+        }
+
+        function showAddForm() {
+            const form = document.getElementById('add-form');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            if (form.style.display === 'block') {
+                document.getElementById('new-bang').focus();
+            }
+        }
+
+        function addBang() {
+            const config = getConfig();
+            let key = document.getElementById('new-bang').value.trim().toLowerCase();
+            let url = document.getElementById('new-url').value.trim();
+
+            // Clean up key (remove ! prefix if present)
+            key = key.replace(/^!/, '');
+
+            if (!key || !url) {
+                showStatus('add-status', 'Please fill in both fields', 'error');
+                return;
+            }
+
+            if (!/^https?:\/\//.test(url)) {
+                showStatus('add-status', 'URL must start with http:// or https://', 'error');
+                return;
+            }
+
+            config.customBangs[key] = url;
+            saveConfig();
+
+            document.getElementById('new-bang').value = '';
+            document.getElementById('new-url').value = '';
+
+            renderBangsList();
+            renderDefaultEngine();
+            showStatus('add-status', `!${key} added successfully!`, 'success');
+        }
+
+        function editBang(key, isCustom) {
+            const config = getConfig();
+            const currentUrl = isCustom ? config.customBangs[key] : BUILT_IN_BANGS[key];
+            const newUrl = prompt(`Edit URL for !${key}:`, currentUrl);
+            if (newUrl !== null && newUrl.trim()) {
+                config.customBangs[key] = newUrl.trim();
+                saveConfig();
+                renderBangsList();
+            }
+        }
+
+        function deleteBang(key) {
+            if (confirm(`Delete !${key}?`)) {
+                const config = getConfig();
+
+                // Always remove from customBangs if present
+                delete config.customBangs[key];
+
+                // If this was a built-in (or override of one), mark as removed
+                if (BUILT_IN_BANGS.hasOwnProperty(key)) {
+                    if (!config.removedBuiltInBangs.includes(key)) {
+                        config.removedBuiltInBangs.push(key);
+                    }
+                }
+
+                // Reset default if we deleted the default engine
+                const availableBangs = getAllBangs();
+                if (!availableBangs[config.defaultEngine]) {
+                    config.defaultEngine = 'p';
+                }
+
+                saveConfig();
+                renderBangsList();
+                renderDefaultEngine();
+            }
+        }
+
+        function resetToDefaults() {
+            if (confirm('Reset all bangs to defaults? This will remove all custom bangs and restore any deleted built-in bangs.')) {
+                const config = getConfig();
+                config.customBangs = {};
+                config.removedBuiltInBangs = [];
+                config.defaultEngine = 'p';
+                saveConfig();
+                renderBangsList();
+                renderDefaultEngine();
+                showStatus('add-status', 'Reset to defaults!', 'success');
+            }
+        }
+
+        function showStatus(elementId, message, type) {
+            const el = document.getElementById(elementId);
+            el.innerHTML = `<div class="status ${type}">${message}</div>`;
+            setTimeout(() => el.innerHTML = '', 3000);
+        }
+
+        // Initialize
+        renderBangsList();
+        renderDefaultEngine();
+    </script>
+</body>
+
+</html>
