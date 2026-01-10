@@ -263,25 +263,31 @@
         const serviceOverride = params.get('s'); // from /search/:service redirect
 
         if (q) {
-            const config = getConfig();
-            const bangs = getAllBangs();
-
-            const match = q.match(/!(\w+)/);
-            const bang = match?.[1]?.toLowerCase();
-            const query = q.replace(/!\w+\s*/g, '').trim();
-
-            if (bang && bangs[bang]) {
-                // Known bang
-                location.replace(bangs[bang] + encodeURIComponent(query));
-            } else if (bang) {
-                // Unknown bang → DDG fallback
-                location.replace('https://duckduckgo.com/?q=' + encodeURIComponent(q));
+            // "Feeling lucky" pattern: standalone ! at start or end → Google I'm Feeling Lucky
+            if (/^!\s/.test(q) || /\s!$/.test(q)) {
+                const luckyQuery = q.replace(/^!\s*/, '').replace(/\s*!$/, '');
+                location.replace('https://www.google.com/search?btnI&q=' + encodeURIComponent(luckyQuery));
             } else {
-                // No bang → use service override (from old URL format) or default engine
-                const serviceMap = { chatgpt: 'gpt', google: 'g', perplexity: 'p', bing: 'b', claude: 'cl', duckduckgo: 'ddg', youtube: 'yt', wikipedia: 'w', reddit: 'r', amazon: 'a', github: 'gh', ebay: 'eb' };
-                const effectiveDefault = serviceOverride ? (serviceMap[serviceOverride] || serviceOverride) : config.defaultEngine;
-                const defaultUrl = bangs[effectiveDefault] || bangs['p'];
-                location.replace(defaultUrl + encodeURIComponent(query));
+                const config = getConfig();
+                const bangs = getAllBangs();
+
+                const match = q.match(/!(\w+)/);
+                const bang = match?.[1]?.toLowerCase();
+                const query = q.replace(/!\w+\s*/g, '').trim();
+
+                if (bang && bangs[bang]) {
+                    // Known bang
+                    location.replace(bangs[bang] + encodeURIComponent(query));
+                } else if (bang) {
+                    // Unknown bang → DDG fallback
+                    location.replace('https://duckduckgo.com/?q=' + encodeURIComponent(q));
+                } else {
+                    // No bang → use service override (from old URL format) or default engine
+                    const serviceMap = { chatgpt: 'gpt', google: 'g', perplexity: 'p', bing: 'b', claude: 'cl', duckduckgo: 'ddg', youtube: 'yt', wikipedia: 'w', reddit: 'r', amazon: 'a', github: 'gh', ebay: 'eb' };
+                    const effectiveDefault = serviceOverride ? (serviceMap[serviceOverride] || serviceOverride) : config.defaultEngine;
+                    const defaultUrl = bangs[effectiveDefault] || bangs['p'];
+                    location.replace(defaultUrl + encodeURIComponent(query));
+                }
             }
         }
     </script>
@@ -337,6 +343,7 @@
             <li>Custom bangs override built-in ones</li>
             <li>Use <code>{q}</code> or end URL with <code>?q=</code> for query placement</li>
             <li>Unknown !bangs fall back to DuckDuckGo</li>
+            <li>Use <code>! query</code> or <code>query !</code> to go directly to first result</li>
         </ul>
     </div>
 
